@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-nginx-proxy
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: '*.alltrails.com'
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-proxy
+          servicePort: 80

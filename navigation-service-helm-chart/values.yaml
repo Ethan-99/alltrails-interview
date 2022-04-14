@@ -1,0 +1,8 @@
+imageTag: "0.1.0"
+
+hpa:
+  enabled: false
+
+memory:
+  requests: 50Mi
+  limits: 100Mi

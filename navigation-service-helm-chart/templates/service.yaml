@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: navigation-service
+spec:
+  selector:
+    app: navigation-service
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: https

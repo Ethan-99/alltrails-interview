@@ -1,0 +1,4 @@
+apiVersion: v2
+name: nginx-proxy
+version: 0.0.1
+description: Chart for nginx reverse proxy

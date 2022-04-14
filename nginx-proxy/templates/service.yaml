@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-proxy
+spec:
+  selector:
+    app: nginx-proxy
+  ports:
+  - name: nginx-proxy
+    protocol: TCP
+    port: 80
+    targetPort: 80
