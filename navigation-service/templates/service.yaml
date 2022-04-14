@@ -1,3 +1,4 @@
+# Expose the navigation-service internally as a service so the nginx proxy can talk to it
 apiVersion: v1
 kind: Service
 metadata:

@@ -5,6 +5,8 @@ metadata:
   labels:
     app: naviation-service
 spec:
+  # Use templating to enable/disable Horizontal Pod Autoscaling for this deployment.
+  # If it is not enabled, we need to define the desired replicas of the deployment.
   {{- if not .Values.hpa.enabled }}
   replicas: 1
   {{- end }}
@@ -16,6 +18,8 @@ spec:
       labels:
         app: naviation-service
     spec:
+      # Init container to download desired OSM file. Helm templating allows you to easily define what site, file, and file extension
+      # in your values.yaml file in which you want to get the OSM file from. This makes it very easy to switch OSM files if desired.
       initContainers:
       - name: install
         image: busybox
@@ -24,19 +28,25 @@ spec:
         - "-O"
         - "/osm_file/{{ .Values.osm_file_name }}.{{ .Values.osm_file_extension }}"
         - "{{ .Values.osm_file_location }}/{{ .Values.osm_file_name }}.{{ .Values.osm_file_extension }}"
+        # Mount the empty osm_file volume here so the main container can use the downloaded OSM file.
         volumeMounts:
         - name: osm_file
           mountPath: "/osm_file"
       containers:
       - name: navigation-service
         image: openrouteservice/openrouteservice:latest
+        # Runs on port 8080
         ports:
         - containerPort: 8080
           name: http
         env:
+        # Per openrouteservice docs, this environment variable is necessary if/when the OSM file is switched out for a new one.
+        # It will rebuild the graphs as intended.
         - name: BUILD_GRAPHS
           value: "True"
         resources:
+        # Used templating for the main container memory, because if the OSM file is quite large, we may need to up the available space.
+        # Templating just allows us to easily control all variable values in the one file (values.yaml).
           memory:
             requests: {{ .Values.memory.requests }}
             limits: {{ .Values.memory.limits }}
@@ -44,8 +54,23 @@ spec:
             requests: 50m
             limits: 100m
         volumeMounts:
+        # Mounting the downloaded OSM file to the correct spot in the container with the correct file extension. 
+        # All volume mount locations in the container were provided from the openrouteservice docs.
         - name: osm_file
           mountPath: /ors-core/data/osm_file.{{ .Values.osm_file_extension }}
+          subPath: /osm_file/{{ .Values.osm_file_name }}.{{ .Values.osm_file_extension }}
+        - name: conf
+          mountPath:
+        - name: elevation_cache
+          mountPath: /ors-core/data/elevation_cache
+        - name: graphs
+          mountPath: /ors-core/data/graphs
+        - name: logs-ors
+          mountPath: /var/log/ors
+        - name: logs-tomcat
+          mountPath: /usr/local/tomcat/logs
+      # Creating these volumes in the case of container failure and restart from within the pod. 
+      # If this were to happen, the data here persists and the container will likely spend less time starting up.
       volumes:
       - name: conf
         emptyDir: {}

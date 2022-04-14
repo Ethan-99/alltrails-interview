@@ -1,3 +1,4 @@
+# Deployment for nginx reverse proxy
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,10 +20,12 @@ spec:
           image: nginx:alpine
           ports:
           - containerPort: 80
+          # Mount the configmap into the pod to set up the configuration for the proxy
           volumeMounts:
             - name: nginx-conf
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+      # define the configmap as a volume
       volumes:
         - name: nginx-conf
           configMap:

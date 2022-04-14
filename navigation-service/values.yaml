@@ -1,10 +1,20 @@
+# This values file is a central location in which we can define certain variables in the navigation helm chart
+# If/when adjust our app to use a different OSM for example, we would simply update the value here and
+# let helm do the rest.
+
+# Enable/disable Horizontal Pod Autoscaling. (this requires metrics-server to be running in the cluster)
 hpa:
   enabled: false
 
+# Define memory allocation for the navigation-service pod. May need to increase this is using a large OSM file
 memory:
   requests: 50Mi
   limits: 100Mi
 
+# Where to get the OSM file, its name, file extension. Ideally, there would be some central repo where OSM files
+# live that we could pull from, instead of pulling it directly the openrouteservice remote repo.
 osm_file_location: "https://github.com/GIScience/openrouteservice/blob/master/openrouteservice/src/main/files"
+
+# If we wanted to use the Northern CA OSM file, we would update this value
 osm_file_name: "heidelberg"
 osm-file_extension: "osm.gz"

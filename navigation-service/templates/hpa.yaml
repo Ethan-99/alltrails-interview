@@ -1,3 +1,5 @@
+# Use templating to enable/disable Horizontal Pod Autoscaling for the navigation-service deployment.
+# HPA allows for automatic scaling based on pod CPU metrics
 {{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

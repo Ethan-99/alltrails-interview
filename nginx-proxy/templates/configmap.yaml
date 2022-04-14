@@ -1,3 +1,10 @@
+# Nginx config file that is loaded into a config map to easily mount into pod.
+
+# Basic configuration which uses the cluster DNS to resolve the IPs of the 
+# Rails service and new Navigation Service.
+
+# The proxy will pass any requests with URL prefix of 'navigation/' to the navigation-service service
+# The proxy will pass any requests with URL prefix of 'rails/' to the pre-existing Rails app service
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -1,3 +1,4 @@
+# Expose the nginx-proxy deployment as a service, so the ingress object can route requests to it.
 kind: Service
 apiVersion: v1
 metadata:
