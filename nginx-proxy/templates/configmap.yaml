@@ -34,7 +34,7 @@ data:
         }
 
         location /navigation/ {
-          proxy_pass http://navigation-service.default.svc.cluster.local:80;
+          proxy_pass http://navigation-service.default.svc.cluster.local:8080;
         }
       }
     }

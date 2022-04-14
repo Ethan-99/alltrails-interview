@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: navigation-service
+  labels:
+    app: naviation-service
+spec:
+  {{- if not .Values.hpa.enabled }}
+  replicas: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      app: navigation-service
+  template:
+    metadata:
+      labels:
+        app: naviation-service
+    spec:
+      initContainers:
+      - name: install
+        image: busybox
+        command:
+        - wget
+        - "-O"
+        - "/osm_file/{{ .Values.osm_file_name }}.{{ .Values.osm_file_extension }}"
+        - "{{ .Values.osm_file_location }}/{{ .Values.osm_file_name }}.{{ .Values.osm_file_extension }}"
+        volumeMounts:
+        - name: osm_file
+          mountPath: "/osm_file"
+      containers:
+      - name: navigation-service
+        image: openrouteservice/openrouteservice:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: BUILD_GRAPHS
+          value: "True"
+        resources:
+          memory:
+            requests: {{ .Values.memory.requests }}
+            limits: {{ .Values.memory.limits }}
+          cpu:
+            requests: 50m
+            limits: 100m
+        volumeMounts:
+        - name: osm_file
+          mountPath: /ors-core/data/osm_file.{{ .Values.osm_file_extension }}
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: elevation_cache
+        emptyDir: {}
+      - name: graphs
+        emptyDir: {}
+      - name: logs-ors
+        emptyDir: {}
+      - name: logs-tomcat
+        emptyDir: {}
+      - name: osm_file
+        emptyDir: {}

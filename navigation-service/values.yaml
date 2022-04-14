@@ -1,0 +1,10 @@
+hpa:
+  enabled: false
+
+memory:
+  requests: 50Mi
+  limits: 100Mi
+
+osm_file_location: "https://github.com/GIScience/openrouteservice/blob/master/openrouteservice/src/main/files"
+osm_file_name: "heidelberg"
+osm-file_extension: "osm.gz"

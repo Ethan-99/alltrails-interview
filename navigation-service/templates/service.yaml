@@ -7,5 +7,5 @@ spec:
     app: navigation-service
   ports:
     - protocol: TCP
-      port: 443
-      targetPort: https
+      port: 8080
+      targetPort: http
