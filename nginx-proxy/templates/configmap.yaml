@@ -29,7 +29,6 @@ data:
       server {
         listen 80;
 
-        server_name ~^(?<subdomain>.*?)\.;
         resolver kube-dns.kube-system.svc.cluster.local valid=5s;
 
         location /healthz {
@@ -38,10 +37,12 @@ data:
 
         location /rails/ {
           proxy_pass http://rails-service.default.svc.cluster.local:3000;
+          proxy_http_version 1.1;
         }
 
         location /navigation/ {
           proxy_pass http://navigation-service.default.svc.cluster.local:8080;
+          proxy_http_version 1.1;
         }
       }
     }
