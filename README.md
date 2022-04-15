@@ -10,6 +10,10 @@ The objective of this repository is to define the infrastructure needed to creat
 * The domain name attached to our cluster is `alltrails.com`
 * There is a valid TLS cert and key that can be loaded into the `tls-secret.yaml` file for secure traffic.
 
+### Diagram
+
+![alt text](https://github.com/Ethan-99/alltrails-interview/blob/main/diagram.jpg?raw=true)
+
 ### Overview of the Nginx proxy:
 
 * All components are packaged in a helm chart for easy deployments and templating ability.
