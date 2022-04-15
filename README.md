@@ -4,11 +4,11 @@
 The objective of this repository is to define the infrastructure needed to create a reverse proxy to route traffic to both a pre-existing Rails app and a new Navigation service.
 
 ### Assumptions
-* The Rails is already exposed to internal cluster traffic via a service resource.
+* The Rails app is already exposed to internal cluster traffic via a service resource.
 * An ingress controller has already been deployed to the cluster.
 * Metrics-server has already been deployed to the cluster.
-* The domain name attached to our cluster is alltrails.com
-* There is a valid TLS cert and key that can be attached to the ingress for secure traffic.
+* The domain name attached to our cluster is `alltrails.com`
+* There is a valid TLS cert and key that can be loaded into the `tls-secret.yaml` file for secure traffic.
 
 ### Overview of the Nginx proxy:
 
@@ -42,7 +42,8 @@ Usage:
 Since the nginx proxy and Navigation service are both packaged in helm charts, it makes deploying to production very easy.
 The simple, manual way of doing it is to install helm in the cluster, and then deploy the app via a helm command like so:
 
-```helm install navigation-service navigation-service/ --values navigation-service/values.yaml
+```
+helm install navigation-service navigation-service/ --values navigation-service/values.yaml
 helm install nginx-proxy nginx-proxy/ --values nginx-proxy/values.yaml
 ```
 
@@ -65,7 +66,7 @@ The Navigation Service can be enabled for Horizontal Pod Autoscaling in the helm
 
 2. How would you adapt the app to use a much larger OSM file, such as the one for Northern CA (451MB)?
 
-Using helm templating, you are able to update the source, file name, and file extension in the helm chart's values.yaml file. If you wanted to adjust the OSM file, you would simply update those values and redeploy/upgrade the chart. Similarly, the navigation service pod memory limits and requests are also done with helm templating. If you know the OSM file will be quite large, increase these values in the values.yaml file and redeploy/upgrade the chart so the pod has enough resources to function properly.
+Using helm templating, you are able to update the source, file name, and file extension of the OSM file in the helm chart's values.yaml file. If you wanted to adjust the OSM file, you would simply update those values and redeploy/upgrade the chart. Similarly, the navigation service pod memory limits and requests are also done with helm templating. If you know the OSM file will be quite large, increase these values in the values.yaml file and redeploy/upgrade the chart so the pod has enough resources to function properly.
 
 3. How does your infrastructure handle security?
 
